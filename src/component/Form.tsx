@@ -7,18 +7,13 @@ const Form: FC<any> = ({ title, formConfig, onSubmit }) => {
                 switch (field.field_type) {
                     case "text":
                         return (
-                            <div>
-                                <label>
-                                    {field.field_name}
-                                    <input
-                                        name={field.field_id}
-                                        type={field.field_type}
-                                        required={field.is_required}
-                                    />
-                                </label>
-                            </div>
+                            <input
+                                placeholder={field.field_name}
+                                name={field.field_id}
+                                type={field.field_type}
+                                required={field.is_required}
+                            />
                         );
-                        break;
                     case "radio":
                         if (field.has_childs) {
                             return (
@@ -53,34 +48,21 @@ const Form: FC<any> = ({ title, formConfig, onSubmit }) => {
                     case "group":
                         if (field.has_childs) {
                             return (
-                                <div>
-                                    {field.childs.map((child_field: any, index: number) => {
-                                        return (
-                                            <div>
-                                                <label>
-                                                    {child_field.field_name}
-                                                    <input
-                                                        name={child_field.field_id}
-                                                        type={child_field.field_type}
-                                                        required={field.is_required}
-                                                    />
-                                                </label>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                                field.childs.map((child_field: any, index: number) => {
+                                    return (
+                                        <input
+                                            placeholder={field.field_name}
+                                            name={child_field.field_id}
+                                            type={child_field.field_type}
+                                            required={field.is_required}
+                                        />
+                                    );
+                                })
                             );
                         }
                         break;
-                    case "number":
-                        break;
-                    case "email":
-                        break;
-                    case "password":
-                        break;
                     case "submit":
                         return <button type={field.field_type} >{field.field_name}</button>
-                        break;
                     default:
                         break;
                 }
