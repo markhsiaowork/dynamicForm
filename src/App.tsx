@@ -2,12 +2,7 @@ import './App.css';
 import Form from './component/Form';
 
 function App() {
-  const handleChange = (id:string) => {
-    console.log(`Toggle ${id}`);
-  }
-  const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  }
+
   const formConfig = [
       {
         field_id: "fullName",
@@ -15,7 +10,7 @@ function App() {
         field_type: "text",
         isMutiple: false,
         has_childs: false,
-        is_required: true
+        is_required: true,
       },
       {
         field_id: "dob",
@@ -94,7 +89,7 @@ function App() {
     ]
   return (
     <div className="App">
-      <Form title={"Sign Up"} formConfig={formConfig} handleChange={handleChange} onSubmit={onSubmit}/>
+      <Form title={"Sign Up"} formConfig={formConfig} />
     </div>
   );
 }

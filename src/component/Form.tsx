@@ -1,7 +1,13 @@
 import { FC } from "react";
-const Form:FC<any> = ({ title, formConfig, handleChange, onSubmit} ) => {
-    
+const Form:FC<any> = ({ title, formConfig } ) => {
+    const toggleCheckBox = (id:string) =>{
+        console.log(`Toggle ${id}`);
+    }
+    const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+    }
     return (
+        
         <form onSubmit={onSubmit}>
             <h2>{title}</h2>
             {formConfig.map((field: any) => {
@@ -46,7 +52,7 @@ const Form:FC<any> = ({ title, formConfig, handleChange, onSubmit} ) => {
                                         name={field.field_id} 
                                         type={field.field_type}
                                         required={field.is_required}
-                                        onChange={()=>handleChange(field.target_Id)}
+                                        onChange={()=>toggleCheckBox(field.target_Id)}
                                     />
                                 </label>
                             </>
@@ -73,7 +79,6 @@ const Form:FC<any> = ({ title, formConfig, handleChange, onSubmit} ) => {
                         break;
                 }
             })}
-            )
         </form>
     );
 };
