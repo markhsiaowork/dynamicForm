@@ -2,8 +2,11 @@ import './App.css';
 import Form from './component/Form';
 
 function App() {
-  const handleChange = (targetId:string) => {
-    
+  const handleChange = (id:string) => {
+    console.log(`Toggle ${id}`);
+  }
+  const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
   }
   const formConfig = [
       {
@@ -50,7 +53,7 @@ function App() {
         childs: [
           {
             field_id: "contact1",
-            field_name: "Contact Name",
+            field_name: "Contact Name 1",
             field_type: "text",
             isMutiple: false,
             has_childs: false,
@@ -73,7 +76,7 @@ function App() {
         isMutiple: false,
         has_childs: false,
         is_required: false,
-        onChange: handleChange("gurdianContact")
+        target_Id: "gurdianContact"
       },
       {
         field_id:"gurdianContact",
@@ -91,7 +94,7 @@ function App() {
     ]
   return (
     <div className="App">
-      <Form title={"Sign Up"} formConfig={formConfig} />
+      <Form title={"Sign Up"} formConfig={formConfig} handleChange={handleChange} onSubmit={onSubmit}/>
     </div>
   );
 }
