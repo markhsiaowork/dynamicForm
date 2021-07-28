@@ -3,7 +3,7 @@ import Form from './component/Form';
 
 function App() {
   const handleChange = (targetId:string) => {
-    console.log(targetId);
+    
   }
   const formConfig = [
       {
