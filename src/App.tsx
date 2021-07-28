@@ -15,6 +15,7 @@ function App() {
         is_required: true
       },
       {
+        field_id: "dob",
         field_name: "Date of Birth",
         field_type: "text",
         isMutiple: false,
@@ -22,6 +23,7 @@ function App() {
         is_required: true
       },
       {
+        field_id: "gender",
         field_name: "Gender",
         field_type: "radio",
         isMutiple: false,
@@ -40,12 +42,14 @@ function App() {
         is_required: false
       },
       {
+        field_id: "contactGroup",
         field_name: "Contact",
         field_type: "group",
         isMutiple: true,
         has_childs: true,
         childs: [
           {
+            field_id: "contact1",
             field_name: "Contact Name",
             field_type: "text",
             isMutiple: false,
@@ -53,6 +57,7 @@ function App() {
             is_required: false
           },
           {
+            field_id: "contact2",
             field_name: "Contact Name 2",
             field_type: "text",
             isMutiple: false,
@@ -61,21 +66,27 @@ function App() {
           }
         ],
       },
-      {
+      { 
+        field_id:"gurdian",
         field_name: "Gurdian",
         field_type: "checkbox",
         isMutiple: false,
         has_childs: false,
         is_required: false,
-        // onChange: handleChange("gurdian_contact")
+        onChange: handleChange("gurdianContact")
       },
       {
-        id: "gurdian_contact",
+        field_id:"gurdianContact",
         field_name: "Gurdian Contact",
         field_type: "text",
         isMutiple: false,
         has_childs: false,
         is_required: false,
+      },
+      {
+        field_id:"submit",
+        field_name: "submit",
+        field_type: "submit",
       }
     ]
   return (

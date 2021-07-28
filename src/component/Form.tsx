@@ -71,6 +71,9 @@ const Form: FC<any> = ({ title, formConfig, onSubmit }) => {
             break;
           case "password":
             break;
+          case "submit":
+            return <button type={field.field_type} >{field.field_name}</button>
+            break;
           default:
             break;
         }
