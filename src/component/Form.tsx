@@ -1,82 +1,162 @@
-import { FC } from "react";
+import React, { FC } from "react";
 const Form:FC<any> = ({ title, formConfig } ) => {
-    const toggleCheckBox = (id:string) =>{
-        console.log(`Toggle ${id}`);
-    }
+    const [config, updateConfig] = React.useState(formConfig);
+
     const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+        e.preventDefault(); 
+        let outPut:any = {};
+        config.forEach( (fields:fields)=> { 
+            let childOutput:any = {};
+            let children:any = [];
+
+            if (fields.type == "fieldGroup" && fields.children !== undefined) {
+                fields.children.forEach(child => {
+                    childOutput[child.name] = child.value;
+                    children.push(childOutput);
+                });
+                outPut[fields.name] = children;
+            }
+            else if ( fields.value ) { 
+                outPut[fields.name] = fields.value;
+            }
+        })
+        console.log(outPut);
+        
     }
+    const toggleHidden = (id:string | undefined, e:React.ChangeEvent<HTMLInputElement> ) =>{
+        if (e.target) {
+            const newConfig =  config.map((fields:fields)=>{
+                return (
+                    fields.id === id 
+                    ? { ...fields, hidden: !e.target.checked, is_required: e.target.checked} 
+                    : fields
+                )
+            })
+            updateConfig(newConfig);
+            handleChange(id, e)
+        }
+    }
+    const handleChange = (id:string | undefined, e:React.ChangeEvent<HTMLInputElement>) => {
+        config.map((fields:fields)=>{
+            if (fields.id === id ) {
+                fields.value =  e.target.value
+            }
+        })
+        
+    }
+    const handleChildChange = (id:string | undefined, e:React.ChangeEvent<HTMLInputElement>) => {
+        config.map((fields:fields)=>{
+            if (fields.children != undefined) {
+                fields.children.forEach(child => {
+                    if (child.id === id ) {
+                        child.value =  e.target.value
+                    }
+                });
+            }
+        })
+        
+    }
+    
+
+
+    interface fields {
+        id: string;
+        name: string;
+        type: string;
+        target_Id?: string;
+        is_required?: boolean;
+        hidden?: boolean;
+        enabled?: boolean;
+        children?: children[];
+        value?: any;
+    }
+    interface children {
+        name: string;
+        id: string;
+        type?: string;
+        is_required?: boolean;
+        visibility?: boolean;
+        enabled?: boolean;
+        value?: any;
+    }
+
     return (
         
         <form onSubmit={onSubmit}>
             <h2>{title}</h2>
-            {formConfig.map((field: any) => {
-                switch (field.field_type) {
-                    case "text":
+            {config.map((fields: fields) => {
+                switch (fields.type) {
+                    case "text" || "email" || "password":
                         return (
-                            <input
-                                placeholder={field.field_name}
-                                name={field.field_id}
-                                type={field.field_type}
-                                required={field.is_required}
-                            />
+                            <div hidden={fields.hidden}>
+                                <input
+                                    placeholder={fields.name}
+                                    name={fields.id}
+                                    type={fields.type}
+                                    required={fields.is_required}
+                                    onChange={(e) => handleChange(fields.id, e)}
+                                />
+                            </div>
                         );
                     case "radio":
-                        if (field.has_childs) {
+                        if (fields.children) {
                             return (
-                                <>
-                                    {field.childs.map((child_field: any) => {
+                                <div hidden={fields.hidden}>
+                                    {fields.children.map((child_field: children) => {
                                         return (
                                             <>
                                                 <label>
                                                     <input
-                                                        type={field.field_type}
-                                                        name={field.field_name}
+                                                        type={fields.type}
+                                                        name={fields.name}
                                                         value={child_field.name}
+                                                        onChange={(e) => handleChange(fields.id, e)}
                                                     />
                                                     {child_field.name}
                                                 </label>
                                             </>
                                         );
                                     })}
-                                </>
+                                </div>
                             );
                         }
-                        break;
+                        return "";
                     case "checkbox":
                         return (
-                            <>
+                            <div hidden={fields.hidden}>
                                 <label>
-                                    {field.field_name}
-                                    <input 
-                                        name={field.field_id} 
-                                        type={field.field_type}
-                                        required={field.is_required}
-                                        onChange={()=>toggleCheckBox(field.target_Id)}
-                                    />
+                                    {fields.name}
+                                    {fields.target_Id 
+                                        ? <input name={fields.id} type={fields.type} required={fields.is_required} onChange={(e) => toggleHidden(fields.target_Id, e)}/>
+                                        : <input name={fields.id} type={fields.type} required={fields.is_required} onChange={(e) => handleChange(fields.id, e)}/>
+                                    }
+                                    
                                 </label>
-                            </>
+                            </div>
                         );
-                    case "group":
-                        if (field.has_childs) {
+                    case "fieldGroup":
+                        if (fields.children) {
                             return (
-                                field.childs.map((child_field: any, index: number) => {
+                                fields.children.map((child_field: children) => {
                                     return (
-                                        <input
-                                            placeholder={child_field.field_name}
-                                            name={child_field.field_id}
-                                            type={child_field.field_type}
-                                            required={field.is_required}
-                                        />
+                                        <div>
+                                            <input
+                                                placeholder={child_field.name}
+                                                name={child_field.id}
+                                                type={child_field.type}
+                                                required={child_field.is_required}
+                                                onChange={(e) => handleChildChange(child_field.id, e)}
+                                            />
+                                        </div>
                                     );
                                 })
                             );
                         }
-                        break;
+                        return "";
                     case "submit":
-                        return <button type={field.field_type} >{field.field_name}</button>
+                        return <button type={fields.type} >{fields.name} </button>
                     default:
-                        break;
+                        return "";
                 }
             })}
         </form>
